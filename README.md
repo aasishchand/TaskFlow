@@ -1,81 +1,146 @@
-# TaskFlow - Task Management Application
+# TaskFlow — Full-Stack Task Management Application
 
-A full-stack, production-ready task management application built with modern web technologies.
+TaskFlow is a production-ready, full-stack task management web application that provides secure user authentication, efficient task CRUD operations, and a responsive task dashboard — all built with modern web technologies and best practices.
+
+---
+
+## Features
+
+- Secure JWT-based authentication (access + refresh tokens)
+- Full CRUD for user tasks
+- Task filtering (status, priority, search)
+- Pagination & sorting support
+- Clean, responsive UI with Tailwind CSS
+- Role-based access & protected frontend routes
+- Strong backend validation, rate limiting & logging
+- Designed to be deployed in production
+
+> Built with separation of concerns between frontend and backend — ideal for scalable development.
+
+---
 
 ## Tech Stack
 
 ### Frontend
-- **Next.js 16** (App Router, TypeScript)
-- **React 19** with Server Components
-- **Tailwind CSS v4** for styling
-- **Axios** with interceptors for API communication
-- **React Hook Form + Zod** for form validation
-- **TanStack React Query** for server state management
-- **react-hot-toast** for notifications
+
+| Technology | Purpose |
+|-----------|---------|
+| Next.js 16 | App Router, TypeScript, Server & Client Components |
+| React 19 | UI rendering |
+| Tailwind CSS v4 | Utility-first responsive styling |
+| TanStack React Query | Server state caching & synchronization |
+| Axios | HTTP client with interceptors for auto token refresh |
+| Zod + React Hook Form | Type-safe form validation |
+| react-hot-toast | Toast notifications |
 
 ### Backend
-- **Node.js + Express 5** (TypeScript)
-- **PostgreSQL** with **Prisma ORM**
-- **JWT** authentication (access + refresh tokens)
-- **bcrypt** for password hashing
-- **express-validator** for request validation
-- **helmet + cors + rate-limiting** for security
-- **Winston** for logging
+
+| Technology | Purpose |
+|-----------|---------|
+| Node.js + Express 5 | REST API server (TypeScript) |
+| PostgreSQL + Prisma ORM | Relational database with type-safe queries |
+| JWT (JSON Web Tokens) | Stateless authentication |
+| bcrypt | Password hashing (10 salt rounds) |
+| helmet + cors + rate limiting | Security middleware |
+| Winston | Structured logging with file rotation |
+
+> Comprehensive full-stack architecture with clean API design.
+
+---
+
+## Screenshots
+
+### Login Page
+The login page features a clean, centered form with email and password fields. Includes client-side validation powered by Zod, error messages for invalid input, and a link to the registration page.
+
+![Login Page](screenshots/login.png)
+
+### Registration Page
+New users can create an account by providing their name, email, and a strong password. Password requirements (uppercase, number, special character) are validated in real-time with clear error feedback.
+
+![Register Page](screenshots/register.png)
+
+### Dashboard — Task List
+The main dashboard displays all user tasks in a responsive card grid. Each card shows the task title, description, status badge (Pending/In Progress/Completed), and priority badge (Low/Medium/High). Includes a "New Task" button and total task count.
+
+![Dashboard](screenshots/dashboard.png)
+
+### Task Filters & Search
+The filter bar allows users to narrow down tasks by status, priority, or free-text search. Search is debounced (300ms) for smooth performance. Filters update the task list instantly via React Query.
+
+![Task Filters](screenshots/filters.png)
+
+### Create / Edit Task Modal
+A modal dialog for creating new tasks or editing existing ones. Fields include title, description, status dropdown, and priority dropdown — all validated with Zod before submission.
+
+![Task Form](screenshots/task-form.png)
+
+### Delete Confirmation
+Before deleting a task, users see a confirmation dialog to prevent accidental deletion. The delete operation uses optimistic updates for a snappy user experience.
+
+![Delete Confirmation](screenshots/delete-confirm.png)
+
+### User Profile
+The profile page shows the user's avatar initial, name, email, and join date. Users can update their name and email inline with validation and toast feedback.
+
+![Profile Page](screenshots/profile.png)
+
+### Health Check API
+The backend exposes a `/api/health` endpoint that returns server status, uptime, and timestamp — useful for monitoring and deployment health checks.
+
+![Health Check](screenshots/health-check.png)
+
+---
 
 ## Prerequisites
 
-- **Node.js** v18.0.0 or higher
-- **npm** v9.0.0 or higher
-- **PostgreSQL** v14 or higher (local or cloud)
+Make sure your development machine has:
+
+- **Node.js** v18+
+- **npm** v9+
+- **PostgreSQL** v14+ (local or cloud)
+
+---
 
 ## Setup Instructions
 
-### 1. PostgreSQL Database
+### 1. Database Setup
 
-**Option A: Local PostgreSQL**
+**Local Option**
 ```bash
-# Create the database
 psql -U postgres -c "CREATE DATABASE taskapp;"
 ```
 
-**Option B: Cloud (e.g., Supabase, Neon, Railway)**
-Get your connection string from your provider.
+**Cloud Option**
+Use services like Supabase, Neon, Railway, etc., and get your connection string.
 
 ### 2. Backend Setup
 ```bash
 cd backend
-
-# Install dependencies
 npm install
-
-# Copy environment file and fill in your values
 cp .env.example .env
-# Edit .env with your DATABASE_URL and JWT secrets
+# Fill in DATABASE_URL & JWT secrets
 
-# Run database migrations
 npx prisma migrate dev --name init
 
-# Start development server
 npm run dev
 ```
 
-The backend will start at **http://localhost:5000**.
+The backend API server will run at **http://localhost:5000**.
 
 ### 3. Frontend Setup
 ```bash
 cd frontend
-
-# Install dependencies
 npm install
-
-# Copy environment file
 cp .env.local.example .env.local
+# Set NEXT_PUBLIC_API_URL=http://localhost:5000
 
-# Start development server
 npm run dev
 ```
 
-The frontend will start at **http://localhost:3000**.
+The frontend will run at **http://localhost:3000**.
+
+---
 
 ## Environment Variables
 
@@ -83,9 +148,9 @@ The frontend will start at **http://localhost:3000**.
 ```env
 PORT=5000
 NODE_ENV=development
-DATABASE_URL="postgresql://postgres:postgres@localhost:5432/taskapp"
-JWT_ACCESS_SECRET=your-256-bit-secret-here
-JWT_REFRESH_SECRET=your-different-256-bit-secret-here
+DATABASE_URL="your_postgres_connection_string"
+JWT_ACCESS_SECRET="your_secret_here"
+JWT_REFRESH_SECRET="your_secret_here"
 CLIENT_URL=http://localhost:3000
 ```
 
@@ -94,98 +159,114 @@ CLIENT_URL=http://localhost:3000
 NEXT_PUBLIC_API_URL=http://localhost:5000
 ```
 
+> These are required for secure authentication and API calls.
+
+---
+
 ## API Documentation
 
 ### Authentication
+
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| POST | `/api/auth/register` | Create account |
-| POST | `/api/auth/login` | Get tokens |
-| POST | `/api/auth/refresh` | Refresh access token |
-| POST | `/api/auth/logout` | Invalidate session |
+| POST | `/api/auth/register` | Register a new user |
+| POST | `/api/auth/login` | Authenticate a user |
+| POST | `/api/auth/refresh` | Refresh tokens |
+| POST | `/api/auth/logout` | Logout user |
 
 ### User
+
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | GET | `/api/user/profile` | Get current user (protected) |
-| PUT | `/api/user/profile` | Update profile (protected) |
+| PUT | `/api/user/profile` | Update user profile (protected) |
 
 ### Tasks
+
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | POST | `/api/tasks` | Create task (protected) |
-| GET | `/api/tasks` | List tasks with pagination/filters (protected) |
+| GET | `/api/tasks` | List tasks (protected) |
 | GET | `/api/tasks/:id` | Get single task (protected) |
 | PUT | `/api/tasks/:id` | Update task (protected) |
 | DELETE | `/api/tasks/:id` | Delete task (protected) |
 
-### Task Query Parameters
-- `status` - Filter by status: `pending`, `in-progress`, `completed`
-- `priority` - Filter by priority: `low`, `medium`, `high`
-- `search` - Search title and description (case-insensitive)
-- `page` - Page number (default: 1)
-- `limit` - Items per page (default: 10, max: 50)
-- `sort` - Sort field with `-` prefix for descending (e.g., `-createdAt`)
+**Query Parameters:** Supports filtering (`status`, `priority`), `search`, `page`, `limit`, and `sort` (e.g., `-createdAt` for newest first).
+
+---
 
 ## Project Structure
 
 ```
 backend/
-├── prisma/schema.prisma    # Database schema
+├── prisma/schema.prisma        # Database schema & migrations
 ├── src/
-│   ├── config/             # Database & environment config
-│   ├── controllers/        # Route handlers
-│   ├── middleware/          # Auth, error handling, validation
-│   ├── routes/             # API route definitions
-│   ├── utils/              # JWT, logger, async handler
-│   ├── types/              # TypeScript declarations
-│   ├── app.ts              # Express app setup
-│   └── server.ts           # Entry point
+│   ├── config/                 # Database & environment config
+│   ├── controllers/            # Route handler logic
+│   ├── middleware/              # Auth, error handling, validation
+│   ├── routes/                 # API route definitions
+│   ├── utils/                  # JWT, logger, async handler
+│   ├── types/                  # TypeScript declarations
+│   ├── app.ts                  # Express app setup
+│   └── server.ts               # Entry point
 
 frontend/
 ├── src/
-│   ├── app/                # Next.js pages (App Router)
-│   │   ├── (auth)/         # Login & Register pages
-│   │   └── (dashboard)/    # Dashboard & Profile pages
-│   ├── components/         # React components
-│   │   ├── auth/           # Auth forms & guards
-│   │   ├── dashboard/      # Task CRUD components
-│   │   ├── layout/         # Navbar
-│   │   └── ui/             # Button, Input, Modal
-│   ├── hooks/              # Custom React hooks
-│   ├── lib/                # API client, auth helpers, query client
-│   ├── types/              # TypeScript interfaces
-│   └── utils/              # Validation schemas, constants
+│   ├── app/                    # Next.js pages (App Router)
+│   │   ├── (auth)/             # Login & Register pages
+│   │   └── (dashboard)/        # Dashboard & Profile pages
+│   ├── components/             # React components
+│   │   ├── auth/               # Auth forms & guards
+│   │   ├── dashboard/          # Task CRUD components
+│   │   ├── layout/             # Navbar
+│   │   └── ui/                 # Button, Input, Modal
+│   ├── hooks/                  # Custom React hooks
+│   ├── lib/                    # API client, auth helpers, query client
+│   ├── types/                  # TypeScript interfaces
+│   └── utils/                  # Validation schemas, constants
 ```
 
-## Features
+> Modular organization for scalability and maintainability.
 
-- User registration and login with JWT authentication
-- Refresh token rotation with httpOnly cookies
-- Full CRUD task management
-- Task filtering by status, priority, and search
-- Paginated task listing
-- User profile management
-- Rate limiting on auth routes
-- Input validation on both client and server
-- Responsive UI with Tailwind CSS
-- Toast notifications for user feedback
-- Protected routes with automatic token refresh
+---
 
 ## Production Deployment
 
 ### Backend
-- Deploy on **Railway**, **Render**, or **AWS EC2/ECS**
-- Use **PostgreSQL** managed service (Supabase, Neon, AWS RDS)
-- Set `NODE_ENV=production` for security headers and minimal logging
+Deploy on:
+- **Railway**
+- **Render**
+- **AWS EC2 / ECS**
+
+Set `NODE_ENV=production` for security headers and optimized logging.
 
 ### Frontend
-- Deploy on **Vercel** (recommended for Next.js)
-- Set `NEXT_PUBLIC_API_URL` to your production backend URL
+Deploy on:
+- **Vercel** (recommended for Next.js)
+- **Netlify**
 
-### Security Checklist
-- [ ] Change JWT secrets to strong random values
+Use HTTPS & secure environment configs.
+
+---
+
+## Security Checklist
+
+- [x] Strong random JWT secrets
+- [x] Proper CORS origins
+- [x] Backend rate limiting
+- [x] Input validation (client + server)
+- [x] Password hashing with bcrypt
 - [ ] Use HTTPS in production
-- [ ] Set proper CORS origins
-- [ ] Enable rate limiting
-- [ ] Use connection pooling for PostgreSQL
+- [ ] Connection pooling for PostgreSQL
+
+---
+
+## About
+
+TaskFlow is a modern, secure, and scalable task management system that follows clean architecture and professional engineering practices — perfect for learning full-stack development or deploying a real product.
+
+---
+
+## License
+
+This project does not currently list a license. You may want to add one (e.g., MIT) if you intend open source distribution.
