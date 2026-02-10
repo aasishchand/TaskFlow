@@ -51,44 +51,66 @@ TaskFlow is a production-ready, full-stack task management web application that 
 ## Screenshots
 
 ### Login Page
-The login page features a clean, centered form with email and password fields. Includes client-side validation powered by Zod, error messages for invalid input, and a link to the registration page.
+
+The login page provides a clean, centered authentication form with email and password fields. It features client-side validation powered by Zod, clear error messages for invalid input, and a "Sign up" link for new users. The page uses a subtle gradient background for a modern, professional look.
 
 ![Login Page](screenshots/login.png)
 
-### Registration Page
-New users can create an account by providing their name, email, and a strong password. Password requirements (uppercase, number, special character) are validated in real-time with clear error feedback.
+---
 
-![Register Page](screenshots/register.png)
+### Dashboard — Task Overview
 
-### Dashboard — Task List
-The main dashboard displays all user tasks in a responsive card grid. Each card shows the task title, description, status badge (Pending/In Progress/Completed), and priority badge (Low/Medium/High). Includes a "New Task" button and total task count.
+After logging in, users land on the main dashboard showing all their tasks in a responsive card grid. Each task card displays the title, description, color-coded status badge (Pending, In Progress, Completed), and priority badge (Low, Medium, High). A "Login successful!" toast notification confirms the user's authentication. The top bar shows the TaskFlow logo, navigation links, and the user's name.
 
 ![Dashboard](screenshots/dashboard.png)
 
-### Task Filters & Search
-The filter bar allows users to narrow down tasks by status, priority, or free-text search. Search is debounced (300ms) for smooth performance. Filters update the task list instantly via React Query.
+---
 
-![Task Filters](screenshots/filters.png)
+### Create New Task
 
-### Create / Edit Task Modal
-A modal dialog for creating new tasks or editing existing ones. Fields include title, description, status dropdown, and priority dropdown — all validated with Zod before submission.
+Clicking the "+ New Task" button opens a modal dialog for creating tasks. The form includes fields for title, description (optional), a status dropdown (Pending / In Progress / Completed), and a priority dropdown (Low / Medium / High). All fields are validated with Zod before submission. The background dims with a blur overlay to keep focus on the form.
 
-![Task Form](screenshots/task-form.png)
+![Create Task Modal](screenshots/task-form.png)
 
-### Delete Confirmation
-Before deleting a task, users see a confirmation dialog to prevent accidental deletion. The delete operation uses optimistic updates for a snappy user experience.
+---
 
-![Delete Confirmation](screenshots/delete-confirm.png)
+### Dashboard — After Adding Tasks
+
+The dashboard updates instantly after creating a new task, thanks to React Query's cache invalidation. Tasks are displayed in a 3-column responsive grid with the newest tasks appearing first. Each card has edit and delete action icons in the top-right corner. The total task count updates in the header.
+
+![Dashboard with Tasks](screenshots/dashboard-tasks.png)
+
+---
+
+### Filter by Status
+
+The status filter dropdown allows users to quickly filter tasks by their current state — All Statuses, Pending, In Progress, or Completed. Selecting a filter instantly updates the task list without a full page reload, powered by React Query's refetching mechanism.
+
+![Status Filter](screenshots/filter-status.png)
+
+---
+
+### Filter by Priority
+
+Similarly, the priority filter lets users view tasks by importance level — All Priorities, Low, Medium, or High. Filters can be combined with the status filter and search bar for precise task discovery. All filtering happens server-side for optimal performance.
+
+![Priority Filter](screenshots/filter-priority.png)
+
+---
+
+### Search Tasks
+
+The search bar provides real-time, debounced search (300ms delay) across task titles and descriptions. As the user types, results are filtered instantly — here searching "TEST4" shows only the matching task. The search is case-insensitive and works alongside the status and priority filters.
+
+![Search Tasks](screenshots/search.png)
+
+---
 
 ### User Profile
-The profile page shows the user's avatar initial, name, email, and join date. Users can update their name and email inline with validation and toast feedback.
 
-![Profile Page](screenshots/profile.png)
+The profile page displays the user's avatar initial (derived from their name), full name, email address, and membership date. Users can edit their name and email through inline form fields with a "Save Changes" button. The active "Profile" tab is highlighted in the navigation bar.
 
-### Health Check API
-The backend exposes a `/api/health` endpoint that returns server status, uptime, and timestamp — useful for monitoring and deployment health checks.
-
-![Health Check](screenshots/health-check.png)
+![User Profile](screenshots/profile.png)
 
 ---
 
